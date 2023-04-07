@@ -15,10 +15,12 @@ import {
 import React from 'react';
 import eth_bg from '../assets/images/eth_bg.jpg';
 import Overlay from '../components/Overlay';
+import Loader from '../components/Loader';
 
 const HomeScreen = () => {
   const [amount, setAmount] = React.useState<number>(0);
   const [address, setAddress] = React.useState<string>('');
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   const changeText: any = (text: string) => {
     if (isNaN(Number(text))) {
@@ -37,6 +39,11 @@ const HomeScreen = () => {
       Alert.alert('Error', 'Please enter amount and address');
       return;
     }
+	setIsLoading(true);
+	setTimeout(() => {
+		setIsLoading(false);
+		clear();
+	}, 1000);
     console.log(amount, address);
   };
 
@@ -48,6 +55,7 @@ const HomeScreen = () => {
   return (
     <ImageBackground source={eth_bg} style={styles.container}>
       <Overlay opacity={0.6} />
+	  {isLoading && <Loader />}
       <KeyboardAvoidingView style={styles.contentContainer}>
         <View style={styles.formBox}>
           <TextInput
