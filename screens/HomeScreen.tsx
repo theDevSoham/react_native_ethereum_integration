@@ -10,6 +10,7 @@ import {
 	TextInput,
 	TouchableOpacity,
 	KeyboardAvoidingView,
+	Alert,
 } from 'react-native';
 import React from 'react';
 import eth_bg from '../assets/images/eth_bg.jpg';
@@ -17,8 +18,28 @@ import Overlay from '../components/Overlay';
 
 const HomeScreen = () => {
 
+	const [amount, setAmount] = React.useState<number>(0);
+	const [address, setAddress] = React.useState<string>('');
+
+	const changeText: any = (text: string) => {
+		setAmount(Number(text));
+	};
+
+	const changeAddr: any = (text: string) => {
+		setAddress(text);
+	};
+
 	const sumbitTxt:Function = () => {
-		console.log('Submitted');
+		if (amount === 0 || address === ''){
+			Alert.alert('Error', 'Please enter amount and address');
+			return;
+		}
+		console.log(amount, address);
+	};
+
+	const clear:Function = () => {
+		setAmount(0);
+		setAddress('');
 	};
 
   return (
@@ -29,16 +50,23 @@ const HomeScreen = () => {
           <TextInput
             placeholder="Enter amount"
             placeholderTextColor="#AEAEAE"
+			value={amount.toString()}
             style={styles.inputTxt}
 			keyboardType='numeric'
+			onChangeText={changeText}
           />
           <TextInput
             placeholder="Enter address to send to"
             placeholderTextColor="#AEAEAE"
+			value={address}
             style={styles.inputTxt}
+			onChangeText={changeAddr}
           />
 
           <View style={styles.btnCont}>
+			<TouchableOpacity style={styles.btn} onPress={() => clear()}>
+				<Text style={styles.btnTxt}>Clear</Text>
+			</TouchableOpacity>
 			<TouchableOpacity style={styles.btn} onPress={() => sumbitTxt()}>
 				<Text style={styles.btnTxt}>Submit</Text>
 			</TouchableOpacity>
@@ -91,7 +119,8 @@ const styles = StyleSheet.create({
   btnCont: {
 	width: '100%',
 	height: 50,
-	justifyContent: 'center',
+	flexDirection: 'row',
+	justifyContent: 'space-evenly',
 	alignItems: 'center',
 	marginVertical: '10%',
   },
