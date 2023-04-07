@@ -41,10 +41,10 @@ const HomeScreen = () => {
     }
 	setIsLoading(true);
 	setTimeout(() => {
+		console.log(amount, address);
 		setIsLoading(false);
 		clear();
 	}, 1000);
-    console.log(amount, address);
   };
 
   const clear: Function = () => {
