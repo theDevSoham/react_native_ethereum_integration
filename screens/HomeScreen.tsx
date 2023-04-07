@@ -80,10 +80,12 @@ const styles = StyleSheet.create({
 
   formBox: {
     width: '80%',
-    height: '80%',
+    height: '50%',
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
     borderRadius: 10,
     padding: 20,
+	justifyContent: 'center',
+	alignItems: 'center',
   },
 
   btnCont: {
