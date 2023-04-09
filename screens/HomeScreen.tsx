@@ -16,18 +16,15 @@ import React from 'react';
 import eth_bg from '../assets/images/eth_bg.jpg';
 import Overlay from '../components/Overlay';
 import Loader from '../components/Loader';
+import axios from 'axios';
 
 const HomeScreen = () => {
-  const [amount, setAmount] = React.useState<number>(0);
+  const [amount, setAmount] = React.useState<string>('0');
   const [address, setAddress] = React.useState<string>('');
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   const changeText: any = (text: string) => {
-    if (isNaN(Number(text))) {
-      Alert.alert('Error', 'Please enter number');
-      return;
-    }
-    setAmount(Number(text));
+    setAmount(text);
   };
 
   const changeAddr: any = (text: string) => {
@@ -35,16 +32,45 @@ const HomeScreen = () => {
   };
 
   const sumbitTxt: Function = () => {
-    if (amount === 0 || address === '') {
+    if (amount === '0' || address === '') {
       Alert.alert('Error', 'Please enter amount and address');
       return;
     }
-	setIsLoading(true);
-	setTimeout(() => {
-		console.log(amount, address);
-		setIsLoading(false);
-		clear();
-	}, 1000);
+
+    if (isNaN(Number(amount))) {
+      Alert.alert('Error', 'Please enter a valid amount');
+      return;
+    }
+
+    setIsLoading(true);
+    let data = JSON.stringify({
+      to: address,
+      value: amount,
+    });
+
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://ether-backend.onrender.com/send',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    };
+
+    axios
+      .request(config)
+      .then(response => {
+        setIsLoading(false);
+        console.log(response.data);
+        clear();
+        Alert.alert('Success', 'Transaction successful: ' + response.status);
+      })
+      .catch(error => {
+        setIsLoading(false);
+        Alert.alert('Error', 'Transaction failed');
+        console.log(error);
+      });
   };
 
   const clear: Function = () => {
@@ -55,7 +81,7 @@ const HomeScreen = () => {
   return (
     <ImageBackground source={eth_bg} style={styles.container}>
       <Overlay opacity={0.6} />
-	  {isLoading && <Loader />}
+      {isLoading && <Loader />}
       <KeyboardAvoidingView style={styles.contentContainer}>
         <View style={styles.formBox}>
           <TextInput
